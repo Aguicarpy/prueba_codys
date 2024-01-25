@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AppController } from './form.controller';
+import { FormService } from './form.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { FormModule } from './form/form.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -14,8 +13,8 @@ import { FormModule } from './form/form.module';
       database: 'form_codys',
       entities: [],
       synchronize: true,
-  }), FormModule],
+  })],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [FormService],
 })
-export class AppModule {}
+export class FormModule {}
