@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './form.controller';
 import { FormService } from './form.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -13,7 +14,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       database: 'form_codys',
       entities: [],
       synchronize: true,
-  })],
+  }), 
+    MulterModule.register({
+    dest: './uploads',
+  }),],
   controllers: [AppController],
   providers: [FormService],
 })

@@ -4,25 +4,28 @@ import { UpdateFormDto } from './dto/update-form.dto';
 import { EntityManager } from 'typeorm';
 import { createForm, deleteForm, getForm, updateForm } from './querys';
 import { error } from 'console';
+import * as fs from 'fs';
+import { renameImage } from './helpers/imageHelper';
 
 @Injectable()
 export class FormService {
   constructor(private readonly entityManager: EntityManager) {} // ---> Modulo para interacción por query con la db
   
-  async createNewForm(createFormDto: CreateFormDto) {
+  async createNewForm(createFormDto: CreateFormDto, file: Express.Multer.File) {
     try {
+      const { filename } = file; // --> Registra los parametros de la imagen a cargar
+    
       const dataCreate = this.entityManager.query(createForm,
-        [
-        createFormDto.profile, createFormDto.fullname, createFormDto.email, createFormDto.phone, createFormDto.birthday
-      ]) // ---> Inyeccion de los datos esperados a insertar segun el objeto de transferencia
-      
-      if(!dataCreate) { //---> Verificar si existe alguna data
-        throw new Error("No se ha creado el registro")
+        [`${filename}`, createFormDto.fullname, createFormDto.email, createFormDto.phone, createFormDto.birthday]
+      );
+
+      if (!dataCreate) {
+        throw new Error("No se ha creado el registro");
       }
-      await dataCreate
-      return dataCreate
+      await dataCreate;
+      return dataCreate;
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 
@@ -40,12 +43,12 @@ export class FormService {
     }
   }
 
-  async updateForm(id: number, updateFormDto: UpdateFormDto) {
+  async updateForm(id: number, updateFormDto: UpdateFormDto, file: Express.Multer.File) {
     try {
-  
-      const result = await this.entityManager.query(
-        updateForm,
-        [...Object.values(updateFormDto), id] // ---> se insertan los nuevos datos segun el DTO y el id registrado
+      const {filename} = file // --> Registra los parametros de la imagen carga e insertar el nuevo cambio
+
+      const result = await this.entityManager.query(updateForm,
+        [`${filename}`, updateFormDto.fullname, updateFormDto.email, updateFormDto.phone, updateFormDto.birthday, id] // ---> se insertan los nuevos datos segun el DTO y el id registrado
       );
   
       // Verificar si se actualizó algún registro
@@ -55,7 +58,6 @@ export class FormService {
         return { message: `No se encontró ningún registro con ID ${id}` };
       }
     } catch (error) {
-      // Manejo adecuado de errores
       throw new Error(`Error al intentar actualizar el registro: ${error.message}`);
     }
   }
@@ -74,4 +76,5 @@ export class FormService {
       throw new Error(`Error al intentar eliminar el registro: ${error.message}`);
     }
   }
+  
 }
