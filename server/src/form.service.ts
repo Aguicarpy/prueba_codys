@@ -4,8 +4,6 @@ import { UpdateFormDto } from './dto/update-form.dto';
 import { EntityManager } from 'typeorm';
 import { createForm, deleteForm, getForm, updateForm } from './querys';
 import { error } from 'console';
-import * as fs from 'fs';
-import { renameImage } from './helpers/imageHelper';
 
 @Injectable()
 export class FormService {
@@ -45,10 +43,15 @@ export class FormService {
 
   async updateForm(id: number, updateFormDto: UpdateFormDto, file: Express.Multer.File) {
     try {
-      const {filename} = file // --> Registra los parametros de la imagen carga e insertar el nuevo cambio
-
-      const result = await this.entityManager.query(updateForm,
-        [`${filename}`, updateFormDto.fullname, updateFormDto.email, updateFormDto.phone, updateFormDto.birthday, id] // ---> se insertan los nuevos datos segun el DTO y el id registrado
+      let filename = ''; // --> cadena vacia por si al actualizar no requiera cambiar la imagen y no dar error
+  
+      if (file) {
+        ({ filename } = file);
+      }
+  
+      const result = await this.entityManager.query(
+        updateForm,
+        [`${filename}`, updateFormDto.fullname, updateFormDto.email, updateFormDto.phone, updateFormDto.birthday, id]
       );
   
       // Verificar si se actualizó algún registro
