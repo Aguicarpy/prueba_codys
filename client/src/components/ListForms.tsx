@@ -1,28 +1,27 @@
 import React from 'react';
 import './ListForms.css';
 
+//Propiedades esperadas por el componente ListForms
 interface ListaComponentProps {
-  existingData: any[];
-  onEdit: (id: number) => void;
-  onDelete: (id: number) => void;
+  existingData: any[];          // --> Datos existentes que se mostrarán en la lista
+  onEdit: (id: number) => void; // --> Función para manejar la edición de un registro por id
+  onDelete: (id: number) => void; // --> Función para manejar la eliminación de un registro por id
 }
 
+// Función auxiliar para calcular la edad a partir de la fecha de nacimiento
 const calculateAge = (birthDate: string) => {
-    const today = new Date();
-    const birth = new Date(birthDate);
-    let age = today.getFullYear() - birth.getFullYear();
-  
-    const monthDiff = today.getMonth() - birth.getMonth();
-  
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-      age--;
-    }
-  
-    return age;
-  };
+  const today = new Date();
+  const birth = new Date(birthDate);
+
+  let age = today.getFullYear() - birth.getFullYear();
+  const monthDiff = today.getMonth() - birth.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+    age--;
+  }
+  return age;
+};
 
 const ListForms: React.FC<ListaComponentProps> = ({ existingData, onEdit, onDelete }) => {
-    console.log(existingData);
     
   return (
     <div className="list-container">
@@ -30,10 +29,9 @@ const ListForms: React.FC<ListaComponentProps> = ({ existingData, onEdit, onDele
         <div key={data.id} className="card">
           {data.profile && (
             <div>
-              {/* <strong>Imagen:</strong> */}
               <img
                 src={`http://localhost:3000/upload/${data.profile}`}
-                alt={`Profile of ${data.fullname}`}
+                alt={`${data.fullname}`}
                 className="profile-image"
               />
             </div>
