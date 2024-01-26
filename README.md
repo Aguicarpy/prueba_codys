@@ -1,27 +1,19 @@
 Instrucciones para montar el proyecto
 
------------------Backend (Nest):-----------------
+-----------------Backend (Nest)-----------------
 
 *Instalacion de dependencias:
 cd server
 npm install
 
 *Ejecución back:
-npm run startdev
+npm run start:dev
 
-
------------------Frontend (Vite):-----------------
-
-*Instalacion de dependencias:
-cd client
-npm install
-
-*Ejecución front:
-npm run dev
 
 -----------------Script para la creación de la base de datos(MySQL)-----------------
-
-*Modificar el path al ejecutable de mysql de su sistema
+*Vaya al directorio server/migration/createDbScript.js
+*Modificar el path al ejecutable de mysql de su sistema(mysql.exe)
+*Modificar con las configuraciones de su mysql(-h host, -u username, -p password)
 
 const { execSync } = require('child_process');
 try {
@@ -36,3 +28,15 @@ try {
 
 *Luego ejecutar el siguiente comando en el directorio --> server/migration ===> comando -->
 node createDbScript.js
+
+
+-----------------Frontend (Vite)-----------------
+
+*Instalacion de dependencias:
+cd client
+npm install
+
+*Ejecución front:
+npm run dev
+
+En esta etapa ya deberia visualizar la vista del formulario
